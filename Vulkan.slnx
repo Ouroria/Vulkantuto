@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Vulkan/Vulkan.vcxproj" Id="27862d65-0218-48f9-a997-60d00ffd8e09" />
+</Solution>
