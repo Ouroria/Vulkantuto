@@ -2,6 +2,7 @@
 #include "Debug.h"
 #include <iostream>
 
+
 void Renderer::SetWindow(GLFWwindow* _window)
 {
 	window = _window;
@@ -143,6 +144,7 @@ void Renderer::createLogicalDevice() {
 											   .ppEnabledExtensionNames = requiredDeviceExtension.data() };
 
 	device = vk::raii::Device(physicalDevice, deviceCreateInfo);
+
 	queue = vk::raii::Queue(device, queueIndex, 0);
 }
 
@@ -221,8 +223,8 @@ void Renderer::createSwapChain()
 											   .presentMode = chooseSwapPresentMode(availablePresentModes),
 											   .clipped = true };
 
-	*swapChain = vk::raii::SwapchainKHR(device, swapChainCreateInfo);
-	swapChainImages = swapChain->getImages();
+	swapChain = vk::raii::SwapchainKHR(device, swapChainCreateInfo);
+	swapChainImages = swapChain.getImages();
 }
 
 void Renderer::createImageViews()
@@ -241,6 +243,19 @@ void Renderer::createImageViews()
 
 void Renderer::createGraphicsPipeline()
 {
+	vk::raii::ShaderModule shaderModule = createShaderModule(readFile("shaders/slang.spv"));
+	vk::PipelineShaderStageCreateInfo vertShaderStageInfo{ .stage = vk::ShaderStageFlagBits::eVertex, .module = shaderModule,  .pName = "vertMain" };
+	vk::PipelineShaderStageCreateInfo fragShaderStageInfo{ .stage = vk::ShaderStageFlagBits::eFragment, .module = shaderModule, .pName = "fragMain" };
+	vk::PipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
+}
+
+vk::raii::ShaderModule Renderer::createShaderModule(const std::vector<char>& code) const
+{
+	vk::ShaderModuleCreateInfo createInfo{ .codeSize = code.size() * sizeof(char), .pCode = reinterpret_cast<const uint32_t*>(code.data()) };
+
+	vk::raii::ShaderModule shaderModule{ device, createInfo };
+
+	return shaderModule;
 }
 
 std::vector<char const*> Renderer::GetRequiredExtensions()
@@ -288,6 +303,21 @@ void Renderer::SetupDebugCallback()
 
 	debugMessenger = instance.createDebugUtilsMessengerEXT(debugInfo);
 }
+
+std::vector<char> Renderer::readFile(const std::string& filename)
+{
+	std::ifstream file(filename, std::ios::ate | std::ios::binary);
+	if (!file.is_open()) {
+		throw std::runtime_error("failed to open file!");
+	}
+	std::vector<char> buffer(file.tellg());
+	file.seekg(0, std::ios::beg);
+	file.read(buffer.data(), static_cast<std::streamsize>(buffer.size()));
+	file.close();
+	return buffer;
+
+}
+
 
 VKAPI_ATTR vk::Bool32 VKAPI_CALL Renderer::DebugCallBack(vk::DebugUtilsMessageSeverityFlagBitsEXT severity, vk::DebugUtilsMessageTypeFlagsEXT type, const vk::DebugUtilsMessengerCallbackDataEXT* pCallBackData, void* pUserData)
 {

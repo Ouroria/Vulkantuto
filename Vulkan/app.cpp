@@ -32,8 +32,19 @@ void app::InitWindow()
 
 void app::InitVulkan()
 {
+
     renderer = new Renderer();
     renderer->SetWindow(window);
+
+    renderer->CreateInstance();
+    renderer->SetupDebugCallback();
+    renderer->createSurface();
+    renderer->pickPhysicalDevice();
+    renderer->createLogicalDevice();
+    renderer->createSwapChain();
+    renderer->createImageViews();
+    renderer->createGraphicsPipeline();
+
 }
 
 void app::DestroyWindow()

@@ -6,6 +6,7 @@
 #include <limits>
 #include <memory>
 #include <cstdint>
+#include <fstream>
 
 class Renderer
 {
@@ -24,6 +25,10 @@ public:
 
 	void createGraphicsPipeline();
 
+	static std::vector<char> readFile(const std::string& filename);
+
+	[[nodiscard]] vk::raii::ShaderModule createShaderModule(const std::vector<char>& code) const;
+
 	void SetWindow(GLFWwindow* _window);
 
 	bool isDeviceSuitable(vk::raii::PhysicalDevice const& physicalDevice);
@@ -41,6 +46,7 @@ public:
 	std::vector <char const*> GetRequiredLayers();
 
 	void SetupDebugCallback();
+	
 
 private:
 	vk::raii::Context context;
@@ -59,7 +65,7 @@ private:
 
 	vk::Extent2D swapChainExtent;
 
-	vk::raii::SwapchainKHR* swapChain;
+	vk::raii::SwapchainKHR swapChain = nullptr;
 
 	std::vector<vk::Image> swapChainImages;
 
