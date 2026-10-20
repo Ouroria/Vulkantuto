@@ -11,6 +11,9 @@
 class Renderer
 {
 public:
+
+	[[nodiscard]] vk::raii::ShaderModule createShaderModule(const std::vector<char>& code) const;
+	
 	void CreateInstance();
 	
 	void pickPhysicalDevice();
@@ -25,13 +28,33 @@ public:
 
 	void createGraphicsPipeline();
 
-	static std::vector<char> readFile(const std::string& filename);
+	void createCommandPool();
 
-	[[nodiscard]] vk::raii::ShaderModule createShaderModule(const std::vector<char>& code) const;
+	void createCommandBuffer();
 
-	void SetWindow(GLFWwindow* _window);
+	void setWindow(GLFWwindow* _window);
 
 	bool isDeviceSuitable(vk::raii::PhysicalDevice const& physicalDevice);
+
+	void SetupDebugCallback();
+
+	void recordCommandBuffer(uint32_t imageIndex);
+
+	void transition_image_layout(
+		uint32_t                imageIndex,
+		vk::ImageLayout         old_layout,
+		vk::ImageLayout         new_layout,
+		vk::AccessFlags2        src_access_mask,
+		vk::AccessFlags2        dst_access_mask,
+		vk::PipelineStageFlags2 src_stage_mask,
+		vk::PipelineStageFlags2 dst_stage_mask);
+
+	void createSyncObjects();
+
+	void drawFrame();
+
+	static std::vector<char> readFile(const std::string& filename);
+
 
 	vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& avaivleFormats);
 
@@ -44,8 +67,6 @@ public:
 	std::vector<char const*> GetRequiredExtensions();
 
 	std::vector <char const*> GetRequiredLayers();
-
-	void SetupDebugCallback();
 	
 
 private:
@@ -59,13 +80,33 @@ private:
 
 	vk::raii::Device device = nullptr;
 
+	vk::raii::SwapchainKHR swapChain = nullptr;
+
 	vk::raii::Queue queue = nullptr;
+
+	vk::raii::PipelineLayout pipelineLayout = nullptr;
+
+	vk::raii::Pipeline graphicsPipeline = nullptr;
+
+	vk::raii::CommandPool commandPool = nullptr;
+
+	vk::raii::CommandBuffer commandBuffer = nullptr;
+
+	vk::raii::Semaphore presentCompleteSemaphore = nullptr;
+
+	vk::raii::Semaphore renderFinishedSemaphore = nullptr;
+
+	vk::raii::Fence drawFence = nullptr;
+
+	GLFWwindow* window = nullptr;
+
+	vk::raii::SurfaceKHR surface = nullptr;
+
+	uint32_t queueIndex = ~0;
 
 	vk::SurfaceFormatKHR swapChainSurfaceFormat;
 
 	vk::Extent2D swapChainExtent;
-
-	vk::raii::SwapchainKHR swapChain = nullptr;
 
 	std::vector<vk::Image> swapChainImages;
 
@@ -73,10 +114,6 @@ private:
 
 	std::vector<const char*> requiredDeviceExtension = {vk::KHRSwapchainExtensionName };
 
-	GLFWwindow* window = nullptr;
-
 	static VKAPI_ATTR vk::Bool32 VKAPI_CALL DebugCallBack(vk::DebugUtilsMessageSeverityFlagBitsEXT, vk::DebugUtilsMessageTypeFlagsEXT, const vk::DebugUtilsMessengerCallbackDataEXT*, void*);
-
-	vk::raii::SurfaceKHR surface = nullptr;
 
 };

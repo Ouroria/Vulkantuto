@@ -19,5 +19,6 @@ private:
 	void InitVulkan();
 	void DestroyVulkan();
 	void DestroyWindow();
+
 };
 
