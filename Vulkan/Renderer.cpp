@@ -499,6 +499,20 @@ void Renderer::drawFrame()
 	{
 		throw std::runtime_error("failed to wait for fence!");
 	}
+
+	auto [result, imageIndex] = swapChain.acquireNextImage(UINT64_MAX, *presentCompleteSemaphores[frameIndex], nullptr);
+
+	if (result == vk::Result::eErrorOutOfDateKHR)
+	{
+		recreateSwapChain();
+		return;
+	}
+	if (result != vk::Result::eSuccess && result != vk::Result::eSuboptimalKHR)
+	{
+		assert(result == vk::Result::eTimeout || result == vk::Result::eNotReady);
+		throw std::runtime_error("failed to acquire swap chain image!");
+	}
+
 	device.resetFences(*inFlightFences[frameIndex]);
 
 	auto [result, imageIndex] = swapChain.acquireNextImage(UINT64_MAX, *presentCompleteSemaphores[frameIndex], nullptr);
@@ -524,6 +538,15 @@ void Renderer::drawFrame()
 											.pSwapchains = &*swapChain,
 											.pImageIndices = &imageIndex };
 	result = queue.presentKHR(presentInfoKHR);
+	if ((result == vk::Result::eSuboptimalKHR) || (result == vk::Result::eErrorOutOfDateKHR))
+	{
+		framebufferResized = false;
+		recreateSwapChain();
+	}
+	else
+	{
+		assert(result == vk::Result::eSuccess);
+	}
 	switch (result)
 	{
 	case vk::Result::eSuccess:

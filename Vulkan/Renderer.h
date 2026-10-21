@@ -107,6 +107,8 @@ private:
 
 	std::vector<const char*> requiredDeviceExtension = {vk::KHRSwapchainExtensionName };
 
+	bool framebufferResized = false;
+
 	static VKAPI_ATTR vk::Bool32 VKAPI_CALL DebugCallBack(vk::DebugUtilsMessageSeverityFlagBitsEXT, vk::DebugUtilsMessageTypeFlagsEXT, const vk::DebugUtilsMessengerCallbackDataEXT*, void*);
 
 };
