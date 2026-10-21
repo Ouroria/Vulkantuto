@@ -14,6 +14,9 @@ public:
 
 	[[nodiscard]] vk::raii::ShaderModule createShaderModule(const std::vector<char>& code) const;
 	
+	void cleanupSwapChain();
+	void recreateSwapChain();
+
 	void CreateInstance();
 	
 	void pickPhysicalDevice();
@@ -30,7 +33,7 @@ public:
 
 	void createCommandPool();
 
-	void createCommandBuffer();
+	void createCommandBuffers();
 
 	void setWindow(GLFWwindow* _window);
 
@@ -55,7 +58,6 @@ public:
 
 	static std::vector<char> readFile(const std::string& filename);
 
-
 	vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& avaivleFormats);
 
 	vk::Extent2D chooseSwapExtent(vk::SurfaceCapabilitiesKHR const& capabilities);
@@ -71,36 +73,27 @@ public:
 
 private:
 	vk::raii::Context context;
-
 	vk::raii::Instance instance = nullptr;
-
 	vk::raii::DebugUtilsMessengerEXT debugMessenger = nullptr;
-
+	vk::raii::SurfaceKHR surface = nullptr;
 	vk::raii::PhysicalDevice physicalDevice = nullptr;
-
 	vk::raii::Device device = nullptr;
-
-	vk::raii::SwapchainKHR swapChain = nullptr;
-
 	vk::raii::Queue queue = nullptr;
-
+	vk::raii::SwapchainKHR swapChain = nullptr;
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
-
 	vk::raii::Pipeline graphicsPipeline = nullptr;
-
 	vk::raii::CommandPool commandPool = nullptr;
-
-	vk::raii::CommandBuffer commandBuffer = nullptr;
-
-	vk::raii::Semaphore presentCompleteSemaphore = nullptr;
-
-	vk::raii::Semaphore renderFinishedSemaphore = nullptr;
-
-	vk::raii::Fence drawFence = nullptr;
-
 	GLFWwindow* window = nullptr;
 
-	vk::raii::SurfaceKHR surface = nullptr;
+	std::vector<vk::raii::CommandBuffer> commandBuffers;
+
+	std::vector<vk::raii::Semaphore> presentCompleteSemaphores;
+
+	std::vector<vk::raii::Semaphore> renderFinishedSemaphores;
+
+	std::vector<vk::raii::Fence> inFlightFences;
+
+	uint32_t frameIndex = 0;
 
 	uint32_t queueIndex = ~0;
 

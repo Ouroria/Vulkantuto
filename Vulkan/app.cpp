@@ -46,7 +46,7 @@ void app::InitVulkan()
     renderer->createImageViews();
     renderer->createGraphicsPipeline();
     renderer->createCommandPool();
-    renderer->createCommandBuffer();
+    renderer->createCommandBuffers();
     renderer->createSyncObjects();
 
 }
