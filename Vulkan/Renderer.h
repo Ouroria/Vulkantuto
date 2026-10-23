@@ -7,6 +7,8 @@
 #include <memory>
 #include <cstdint>
 #include <fstream>
+#include <glm/glm.hpp>
+#include <array>
 
 class Renderer
 {
@@ -34,6 +36,12 @@ public:
 	void createCommandPool();
 
 	void createCommandBuffers();
+
+	void createVertexBuffer();
+
+	void createIndexBuffer();
+
+	std::pair<vk::raii::Buffer, vk::raii::DeviceMemory> createBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties);
 
 	void setWindow(GLFWwindow* _window);
 
@@ -69,6 +77,10 @@ public:
 	std::vector<char const*> GetRequiredExtensions();
 
 	std::vector <char const*> GetRequiredLayers();
+
+	void setFramebuffer(bool x);
+
+	bool getFramebuffer();
 	
 
 private:
@@ -78,11 +90,15 @@ private:
 	vk::raii::SurfaceKHR surface = nullptr;
 	vk::raii::PhysicalDevice physicalDevice = nullptr;
 	vk::raii::Device device = nullptr;
-	vk::raii::Queue queue = nullptr;
+	vk::raii::Queue graphicsQueue = nullptr;
 	vk::raii::SwapchainKHR swapChain = nullptr;
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
 	vk::raii::Pipeline graphicsPipeline = nullptr;
 	vk::raii::CommandPool commandPool = nullptr;
+	vk::raii::Buffer vertexBuffer = nullptr;
+	vk::raii::DeviceMemory vertexBufferMemory = nullptr;
+	vk::raii::Buffer       indexBuffer = nullptr;
+	vk::raii::DeviceMemory indexBufferMemory = nullptr;
 	GLFWwindow* window = nullptr;
 
 	std::vector<vk::raii::CommandBuffer> commandBuffers;
@@ -95,7 +111,7 @@ private:
 
 	uint32_t frameIndex = 0;
 
-	uint32_t queueIndex = ~0;
+	uint32_t graphicsQueueIndex = ~0;
 
 	vk::SurfaceFormatKHR swapChainSurfaceFormat;
 
@@ -106,6 +122,10 @@ private:
 	std::vector<vk::raii::ImageView> swapChainImageViews;
 
 	std::vector<const char*> requiredDeviceExtension = {vk::KHRSwapchainExtensionName };
+
+	uint32_t findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties);
+
+	void copyBuffer(vk::raii::Buffer& srcBuffer, vk::raii::Buffer& dstBuffer, vk::DeviceSize size);
 
 	bool framebufferResized = false;
 

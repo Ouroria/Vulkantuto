@@ -1,12 +1,18 @@
 #include "app.h"
 
-void app::Init()
+void App::framebufferResizeCallback(GLFWwindow* window, int width, int height)
+{
+    auto app = reinterpret_cast<Renderer*>(glfwGetWindowUserPointer(window));
+    app->setFramebuffer(true);
+}
+
+void App::Init()
 {
     InitWindow();
     InitVulkan();
 }
 
-void app::Run()
+void App::Run()
 {
     while (!glfwWindowShouldClose(window))
     {
@@ -15,13 +21,13 @@ void app::Run()
     }
 }
 
-void app::Destroy()
+void App::Destroy()
 {
     DestroyVulkan();
     DestroyWindow();
 }
 
-void app::InitWindow()
+void App::InitWindow()
 {
     glfwInit();
 
@@ -32,13 +38,7 @@ void app::InitWindow()
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
-static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
-{
-    auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
-    app->framebufferResized = true;
-}
-
-void app::InitVulkan()
+void App::InitVulkan()
 {
 
     renderer = new Renderer();
@@ -53,18 +53,20 @@ void app::InitVulkan()
     renderer->createImageViews();
     renderer->createGraphicsPipeline();
     renderer->createCommandPool();
+    renderer->createVertexBuffer();
+    renderer->createIndexBuffer();
     renderer->createCommandBuffers();
     renderer->createSyncObjects();
 
 }
 
-void app::DestroyWindow()
+void App::DestroyWindow()
 {
     glfwDestroyWindow(window);
 
     glfwTerminate();
 }
 
-void app::DestroyVulkan()
+void App::DestroyVulkan()
 {
 }

@@ -3,7 +3,7 @@
 
 int main()
 {
-	app appli;
+	App appli;
 	appli.Init();
 	appli.Run();
 	appli.Destroy();
