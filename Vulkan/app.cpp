@@ -51,10 +51,14 @@ void App::InitVulkan()
     renderer->createLogicalDevice();
     renderer->createSwapChain();
     renderer->createImageViews();
+    renderer->createDescriptorSetLayout();
     renderer->createGraphicsPipeline();
     renderer->createCommandPool();
     renderer->createVertexBuffer();
     renderer->createIndexBuffer();
+    renderer->createUniformBuffers();
+    renderer->createDescriptorPool();
+    renderer->createDescriptorSets();
     renderer->createCommandBuffers();
     renderer->createSyncObjects();
 

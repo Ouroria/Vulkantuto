@@ -7,8 +7,11 @@
 #include <memory>
 #include <cstdint>
 #include <fstream>
-#include <glm/glm.hpp>
 #include <array>
+#include <chrono>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Renderer
 {
@@ -41,6 +44,14 @@ public:
 
 	void createIndexBuffer();
 
+	void createUniformBuffers();
+
+	void createDescriptorPool();
+
+	void createDescriptorSets();
+
+	void createDescriptorSetLayout();
+
 	std::pair<vk::raii::Buffer, vk::raii::DeviceMemory> createBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties);
 
 	void setWindow(GLFWwindow* _window);
@@ -52,11 +63,11 @@ public:
 	void recordCommandBuffer(uint32_t imageIndex);
 
 	void transition_image_layout(
-		uint32_t                imageIndex,
-		vk::ImageLayout         old_layout,
-		vk::ImageLayout         new_layout,
-		vk::AccessFlags2        src_access_mask,
-		vk::AccessFlags2        dst_access_mask,
+		uint32_t imageIndex,
+		vk::ImageLayout old_layout,
+		vk::ImageLayout new_layout,
+		vk::AccessFlags2 src_access_mask,
+		vk::AccessFlags2 dst_access_mask,
 		vk::PipelineStageFlags2 src_stage_mask,
 		vk::PipelineStageFlags2 dst_stage_mask);
 
@@ -92,14 +103,22 @@ private:
 	vk::raii::Device device = nullptr;
 	vk::raii::Queue graphicsQueue = nullptr;
 	vk::raii::SwapchainKHR swapChain = nullptr;
+	vk::raii::DescriptorSetLayout descriptorSetLayout = nullptr;
 	vk::raii::PipelineLayout pipelineLayout = nullptr;
 	vk::raii::Pipeline graphicsPipeline = nullptr;
 	vk::raii::CommandPool commandPool = nullptr;
 	vk::raii::Buffer vertexBuffer = nullptr;
 	vk::raii::DeviceMemory vertexBufferMemory = nullptr;
-	vk::raii::Buffer       indexBuffer = nullptr;
+	vk::raii::Buffer indexBuffer = nullptr;
 	vk::raii::DeviceMemory indexBufferMemory = nullptr;
+	vk::raii::DescriptorPool descriptorPool = nullptr;
 	GLFWwindow* window = nullptr;
+
+	std::vector<vk::raii::Buffer> uniformBuffers;
+	std::vector<vk::raii::DeviceMemory> uniformBuffersMemory;
+	std::vector<void*> uniformBuffersMapped;
+
+	std::vector<vk::raii::DescriptorSet> descriptorSets;
 
 	std::vector<vk::raii::CommandBuffer> commandBuffers;
 
@@ -126,6 +145,8 @@ private:
 	uint32_t findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties);
 
 	void copyBuffer(vk::raii::Buffer& srcBuffer, vk::raii::Buffer& dstBuffer, vk::DeviceSize size);
+
+	void updateUniformBuffer(uint32_t currentImage);
 
 	bool framebufferResized = false;
 
