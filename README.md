@@ -12,7 +12,8 @@ GLFW, pour la création de la fenêtre et la gestion des événements.
 
 GLM, pour les opérations mathématiques utilisées en rendu 3D.
 
-stb_image, pour le chargement des images utilisées comme textures. (stb_image est inclue dans ce projet et utilise "stb_image au lieu de <stb_image>")
+stb_image, pour le chargement des images utilisées comme textures. 
+(stb_image est inclue dans ce projet et utilise "stb_image" au lieu de <stb_image>")
 
 Un GPU et un pilote graphique compatibles avec Vulkan.
 
@@ -23,3 +24,7 @@ III. Exécution
 IV. Version Debug
 
    Renderer.cpp ligne 177 enlever le commantaire a une ligne
+
+V. Fonctionnalite
+
+   Un cube 3D qui tourne sur lui meme, peut modifier la texture en modifiant le png dans VulkanTuro\textures ou la texture en changeant dans Texture.cpp ligne 100 "textures/texture.png" en "textures/xxx.xxx"
