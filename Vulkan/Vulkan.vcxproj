@@ -152,17 +152,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
+    <ClCompile Include="Buffers.cpp" />
     <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Dependencies.cpp" />
+    <ClCompile Include="Drawing.cpp" />
+    <ClCompile Include="GraphicPipeline.cpp" />
+    <ClCompile Include="stb_image_impl.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Vulkan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
+    <ClInclude Include="Buffers.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Dependencies.h" />
+    <ClInclude Include="Drawing.h" />
+    <ClInclude Include="GraphicPipeline.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="UniformBufferObject.h" />
+    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="VulkanConfig.h" />
+    <ClInclude Include="VulkanContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Vulkan.rc" />

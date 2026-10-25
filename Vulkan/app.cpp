@@ -17,7 +17,7 @@ void App::Run()
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        renderer->drawFrame();
+        drawing->drawFrame();
     }
 }
 
@@ -34,33 +34,40 @@ void App::InitWindow()
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    window = glfwCreateWindow(800, 600, "Vulkan Triangle", nullptr, nullptr);
+    window = glfwCreateWindow(800, 600, "Vulkan cube", nullptr, nullptr);
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
 void App::InitVulkan()
 {
 
-    renderer = new Renderer();
+    renderer = new Renderer(context);
+    buffers = new Buffers(context, renderer);
+    texture = new Texture(context, renderer, buffers);
+    graphicpipeline = new GraphicPipeline(context, texture);
+    drawing = new Drawing(context, texture, buffers);
     renderer->setWindow(window);
-
-    renderer->CreateInstance();
+    renderer->createInstance();
     renderer->SetupDebugCallback();
-    renderer->createSurface();
+    texture->createSurface();
     renderer->pickPhysicalDevice();
     renderer->createLogicalDevice();
-    renderer->createSwapChain();
-    renderer->createImageViews();
-    renderer->createDescriptorSetLayout();
-    renderer->createGraphicsPipeline();
-    renderer->createCommandPool();
-    renderer->createVertexBuffer();
-    renderer->createIndexBuffer();
-    renderer->createUniformBuffers();
-    renderer->createDescriptorPool();
-    renderer->createDescriptorSets();
-    renderer->createCommandBuffers();
-    renderer->createSyncObjects();
+    texture->createSwapChain();
+    texture->createImageViews();
+    buffers->createDescriptorSetLayout();
+    graphicpipeline->createGraphicsPipeline();
+    buffers->createCommandPool();
+    texture->createDepthResources();
+    texture->createTextureImage();
+    texture->createTextureImageView();
+    texture->createTextureSampler();
+    buffers->createVertexBuffer();
+    buffers->createIndexBuffer();
+    buffers->createUniformBuffers();
+    buffers->createDescriptorPool();
+    buffers->createDescriptorSets();
+    buffers->createCommandBuffers();
+    drawing->createSyncObjects();
 
 }
 

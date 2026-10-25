@@ -3,6 +3,10 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -12,3 +16,12 @@
 
 #define VULKAN_HPP_NO_STRUCT_CONSTRUCTORS
 #include "vulkan/vulkan_raii.hpp"
+
+#include <iostream>
+#include <algorithm>
+#include <limits>
+#include <memory>
+#include <cstdint>
+#include <fstream>
+#include <array>
+#include <chrono>
