@@ -174,8 +174,8 @@ std::vector<char const*> Renderer::GetRequiredLayers()
 
 	std::vector<char const*> requiredLayers = {};
 
-	if (Debug::enableDebug)
-		requiredLayers.append_range(validationLayer);
+	//if (Debug::enableDebug)
+		//requiredLayers.append_range(validationLayer);
 
 	return requiredLayers;
 }
