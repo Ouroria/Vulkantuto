@@ -1,8 +1,8 @@
-1. Presentation:
+I. Presentation:
    
   Ce projet est l'apprentissage de la librairie Vulkan en c++ ainsi que la creation d'un cube 3d
 
-2. Prérequis
+II. Prérequis
 
 Les outils et bibliothèques suivants sont nécessaires pour compiler et exécuter le projet :
 
@@ -16,10 +16,10 @@ stb_image, pour le chargement des images utilisées comme textures. (stb_image e
 
 Un GPU et un pilote graphique compatibles avec Vulkan.
 
-3. Exécution
+III. Exécution
 
    Double click sur "Vulkan.exe" dans VulkanTuto\Vulkan
 
-4. Version Debug
+IV. Version Debug
 
    Renderer.cpp ligne 177 enlever le commantaire a une ligne
